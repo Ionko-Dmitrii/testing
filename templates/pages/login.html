@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Авторизация{% endblock %}
+{% block content %}
+    <main class="registration">
+        <div class="container">
+            {% include 'components/modal.html' with title_modal="Авторизация" text_modal="Вы успешно авторизовались!!" %}
+            <h1>Авторизация</h1>
+            <form class="form" action="{% url 'login' %}" method="post" onsubmit="event.preventDefault()">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Логин</label>
+                    <input required placeholder="Введите логин" type="text" class="form-control" name="username" id="username">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input required placeholder="Введите пароль" type="password" class="form-control" name="password" id="password">
+                    <div class="invalid-feedback"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Авторизоваться</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/ajax-auth.js' %}"></script>
+{% endblock %}

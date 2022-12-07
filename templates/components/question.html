@@ -1,0 +1,23 @@
+<div class="mb-5">
+    <div class="mb-3">
+        <span>{{ question.number }}.</span> {{ question.text }}
+    </div>
+    <div>
+        {% for answer in question.question_answers.all %}
+            <div class="form-check ms-3">
+                <input class="form-check-input"
+                       name="checkbox{{ question.id }}"
+                       type="radio" value="{{ answer.id }}"
+                       id="answer{{ answer.id }}"
+                       {% if user in answer.user.all %}checked{% endif %}
+                       {% if user.id in question.users %}disabled{% endif %}
+                />
+                <label class="form-check-label" for="answer{{ answer.id }}">{{ answer.text }}</label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<button type="submit" class="btn btn-primary"
+        {% if user.id in question.users %}disabled{% endif %}
+>Ответить
+</button>

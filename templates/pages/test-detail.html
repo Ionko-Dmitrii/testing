@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ test_object.title }}{% endblock %}
+{% block content %}
+    <main class="test-list">
+        <div class="container">
+            {% include 'components/modal.html' with title_modal="Ошибка" text_modal="Выберите вариант ответа!!" %}
+            <h1>{{ test_object.title }}</h1>
+            {% if question %}
+                <form class="add-answer" action="{% url 'add_answer' %}"
+                      method="post" onsubmit="event.preventDefault()">
+                    {% csrf_token %}
+                    {% include 'components/question.html' %}
+                    {% include 'components/pagination.html' %}
+                </form>
+            {% else %}
+                <h3>Тест пройден!!</h3>
+                <div style="color: green">Колличество правильных ответов: {{ finish_test.correct_answers }}</div>
+                <div style="color: red">Колличество неправильных ответов: {{ finish_test.incorrect_answers }}</div>
+                <div class="progress mb-3 mt-3 bg-danger">
+                  <div class="progress-bar bg-success" role="progressbar"
+                       aria-label="Example with label"
+                       style="width: {{ finish_test.percentage_correct_answers }}%"
+                       aria-valuenow="{{ finish_test.percentage_correct_answers }}"
+                       aria-valuemin="0"
+                       aria-valuemax="100">{{ finish_test.percentage_correct_answers }}%
+                  </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.add-answer').on('submit', function () {
+            let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+            let answerId = $('.form-check-input:checked').val()
+            let url = $(this).attr('action');
+
+            if (answerId) {
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: {
+                        'answer_id': answerId,
+                        'csrfmiddlewaretoken': csrfToken
+                    },
+
+                    success: function (data) {
+                        location.reload()
+                    },
+
+                    error: function (errors) {
+                        new bootstrap.Modal('#exampleModal', {}).show();
+                        $('.modal .modal-body').text(errors['responseJSON']['answer_id'][0])
+                    }
+                })
+            } else {
+                new bootstrap.Modal('#exampleModal', {}).show();
+                $('.modal .modal-body').text('Выберите вариант ответа!!')
+            }
+        })
+    </script>
+{% endblock %}

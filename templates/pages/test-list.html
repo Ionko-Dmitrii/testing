@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Тесты{% endblock %}
+{% block content %}
+    <main class="test-list">
+        <div class="container">
+            <h1>Список тестов</h1>
+            {% if user.is_authenticated %}
+                <div class="row">
+                    {% for test in test_list %}
+                        {% include 'components/test-card.html' %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h2>Зарегистрируйтесь!</h2>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
