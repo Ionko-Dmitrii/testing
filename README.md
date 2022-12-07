@@ -23,11 +23,12 @@
 ```.bash
     $ virtualenv venv
     $ pip install -r requirements.txt
+    $ Добавить `.env` файл для настроек
 ```
 Необходимо создать в PostgreSQL создать БД:
 ```.bash
     $ sudo -u postgres psql
-    $ create database armada_db encoding 'UTF-8';
+    $ create database testing_db encoding 'UTF-8';
     $ \q
 ```
 После создания БД, необходимо применить миграцию, после запуск тестового сервера:
