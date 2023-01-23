@@ -49,3 +49,19 @@ class QuestionFormAdmin(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class RightAnswerForm(forms.Form):
+    """Form for get right answer"""
+
+    id_question = forms.IntegerField(required=True)
+
+    def clean(self):
+        cleaned_data = super(RightAnswerForm, self).clean()
+        answer = Question.objects.filter(id=cleaned_data.get('id_question')).exists()
+        if answer is False:
+            raise forms.ValidationError({
+                'id_question': 'Нет такого вопроса!!'
+            })
+
+        return cleaned_data

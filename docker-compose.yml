@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    restart: always
+    image: web_test
+    env_file: ./.env
+    command: ./docker-entrypoint.sh
+    volumes:
+      - ./static:/web_django/static
+      - ./media:/web_django/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres:14.1
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.env_db
+    restart: always
+  redis:
+    restart: on-failure
+    image: redis
+  worker:
+    image: web_test
+    env_file: ./.env
+    command: celery -A core worker --loglevel=INFO -P solo
+    restart: always
+    volumes:
+      - ./static:/web_django/static
+    depends_on:
+      - web
+      - redis
+  worker_schedule:
+    image: web_test
+    env_file: ./.env
+    command: celery -A core beat --loglevel=INFO -s /web_django/celerybeat-schedule
+    restart: always
+    volumes:
+      - ./static:/web_django/static
+    depends_on:
+      - web
+      - redis
+
+volumes:
+  postgres_data:

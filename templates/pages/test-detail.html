@@ -62,5 +62,29 @@
                 $('.modal .modal-body').text('Выберите вариант ответа!!')
             }
         })
+
+        $('.answer').on("click", function(){
+            let questionId = $(this).data('id');
+            let url = $(this).data('url');
+            let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    'id_question': questionId,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+
+                success: function (data) {
+                    console.log('success', data)
+                    $(`.form-check-input[value="${data.answer_id}"]`).prop('checked', true);
+                },
+
+                error: function (errors) {
+                    console.log('error', errors)
+                }
+            })
+        })
     </script>
 {% endblock %}

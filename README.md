@@ -37,3 +37,24 @@
     $ python manage.py runserver
 ```
 Если все успешно то переходите по ссылке ==> `http://locahost:8000`
+
+# Как поднять проект в docker?
+Зависимости:
+- docker
+- docker-compose
+- .env_db
+
+## Переменные окружения для базы данных docker .env_db:
+| Key    | Description   |    Default value  |
+| :---         |     :---      |          :--- |
+| `POSTGRES_DB`  | db name  | testing              |
+| `POSTGRES_USER`  | db user  | postgres              |
+| `POSTGRES_PASWORD`| db password | postgres |
+
+После создания .env_db и установки зависимостей:
+```.bash
+    $ docker-compose build web
+    $ docker-compose up -d
+```
+
+Если все успешно то переходите по ссылке ==> `http://locahost:8000`
