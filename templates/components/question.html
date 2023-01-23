@@ -18,6 +18,10 @@
     </div>
 </div>
 <button type="submit" class="btn btn-primary"
-        {% if user.id in question.users %}disabled{% endif %}
->Ответить
+        {% if user.id in question.users %}disabled{% endif %}>
+        Ответить
 </button>
+<div class="btn btn-primary answer" data-id="{{ question.id }}" data-url="{% url 'right_answer' %}"
+        {% if user.id in question.users %}disabled{% endif %}>
+        Получить правильный ответ
+</div>

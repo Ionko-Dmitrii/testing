@@ -5,8 +5,9 @@ from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView
 
-from apps.common.forms import AddedAnswerForm
+from apps.common.forms import AddedAnswerForm, RightAnswerForm
 from apps.common.models import TestGroup, Question, AnswerToQuestion
+from apps.common.services import ParseAnswerAndQuestionsPage
 
 
 class TestListView(ListView):
@@ -93,3 +94,18 @@ def added_number_after_delete(sender, instance, **kwargs):
         question_list.append(question)
 
     Question.objects.bulk_update(question_list, ['number'])
+
+
+class RightAnswerView(View):
+    """Endpoint for get right answer"""
+
+    def post(self, request, *args, **kwargs):
+        form = RightAnswerForm(data=request.POST)
+
+        if form.is_valid():
+            right_answer_id = AnswerToQuestion.objects.filter(
+                question_id=form.cleaned_data.get('id_question'), is_right=True
+            ).first().id
+            return JsonResponse(dict(answer_id=right_answer_id), status=200)
+
+        return JsonResponse(dict(message='Произошка какая та ошибка!!'), status=400)
